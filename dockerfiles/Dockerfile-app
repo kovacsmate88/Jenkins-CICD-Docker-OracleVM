@@ -6,7 +6,7 @@ FROM python:3.9-alpine3.17
 WORKDIR /app
 
 # Copy the files 'app.py' and 'requirements.txt' from the local directory to the "/app" directory in the container.
-COPY app.py requirements.txt /app/
+COPY ./app/app.py ./app/requirements.txt /app/
 
 # Install any packages specified in 'requirements.txt'.
 # Since we're using Alpine, pip3 installs Python packages into the Alpine image.
