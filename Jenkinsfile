@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image
-                    sh "docker build -t ${IMAGE_NAME}:latest ./dockerfiles/Dockerfile-app"
+                    sh "docker build -t ${IMAGE_NAME}:${VERSION} ./dockerfiles/Dockerfile-app"
                     echo "Image built"
                 }
             }
