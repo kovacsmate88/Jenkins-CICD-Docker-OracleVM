@@ -39,7 +39,7 @@ pipeline {
                     
                     // Push the image
                     sh "docker push ${IMAGE_NAME}:${VERSION}"
-                    echo "Image ${VERSION} pushed"
+                    echo "Image ${env.VERSION} pushed"
                 }
             }
         }
