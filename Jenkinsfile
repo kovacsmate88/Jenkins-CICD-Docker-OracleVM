@@ -59,7 +59,7 @@ pipeline {
                 script{
                     // Build and archive the artifact
                     sh "tar czf my_app_${BUILD_NUMBER}.tar.gz ./app/app.py ./app/requirements.txt"
-                    archiveArtifacts artifacts: 'my_app_${env.BUILD_NUMBER}.tar.gz', allowEmptyArchive: true
+                    archiveArtifacts artifacts: "my_app_${env.BUILD_NUMBER}.tar.gz", allowEmptyArchive: true
                 }
             }
         }
