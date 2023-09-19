@@ -14,15 +14,19 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Get the code from the version control system.
-                checkout scm 
+                checkout scm
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
+                    // Debugging: Print current directory and list files
+                    sh "pwd"
+                    sh "ls -al"
+
                     // Build the Docker image
-                    sh "docker build -t ${IMAGE_NAME}:${VERSION} ./dockerfiles/Dockerfile-app"
+                    sh "docker build -t ${IMAGE_NAME}:${VERSION} -f ./dockerfiles/Dockerfile-app ./app"
                     echo "Image built"
                 }
             }
