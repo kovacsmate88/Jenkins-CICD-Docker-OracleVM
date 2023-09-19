@@ -21,10 +21,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Debugging: Print current directory and list files
-                    sh "pwd"
-                    sh "ls -al"
-
                     // Build the Docker image
                     sh "docker build -t ${IMAGE_NAME}:${VERSION} -f ./dockerfiles/Dockerfile-app ."
                     echo "Image built"
@@ -50,29 +46,32 @@ pipeline {
 
         stage('Cleanup image') {
             steps {
-                // Remove the Docker image from the Jenkins agent for storage management
-                sh "docker rmi ${IMAGE_NAME}:${VERSION}"
-                echo "Image has removed"
+                script{
+                    // Remove the Docker image from the Jenkins agent for storage management
+                    sh "docker rmi ${IMAGE_NAME}:${VERSION}"
+                    echo "Image has removed"
+                }
             }
         }
 
         
         stage('Archive Artifacts') {
             steps {
-                // Build and archive the artifact
-                sh '''
-                tar czf my_app_${BUILD_NUMBER}.tar.gz ./app/app.py ./app/requirements.txt
-                '''
-                archiveArtifacts artifacts: 'my_app_${BUILD_NUMBER}.tar.gz', allowEmptyArchive: true
+                script{
+                    // Build and archive the artifact
+                    sh "tar czf my_app_${BUILD_NUMBER}.tar.gz ./app/app.py ./app/requirements.txt"
+                    archiveArtifacts artifacts: 'my_app_${env.BUILD_NUMBER}.tar.gz', allowEmptyArchive: true
+                }
             }
         }
 
         stage('Cleanup Older Artifacts') {
             steps {
-                // Remove all artifacts except the latest one for storage management
-                sh '''
-                ls -t my_app_*.tar.gz | tail -n +2 | xargs rm -f
-                '''
+                script{
+                    // Remove all artifacts except the latest one for storage management
+                    sh "ls -t my_app_*.tar.gz | tail -n +2 | xargs rm -f"
+                }
+                
             }
         }
     }
