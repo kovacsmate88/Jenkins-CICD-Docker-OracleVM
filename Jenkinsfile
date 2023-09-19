@@ -48,12 +48,27 @@ pipeline {
             }
         }
 
-        stage('Cleanup') {
+        stage('Cleanup image') {
             steps {
                 // Remove the Docker image from the Jenkins agent
                 sh "docker rmi ${IMAGE_NAME}:${VERSION}"
                 echo "Image has removed"
             }
+        }
+
+        
+        stage('Build Artifact') {
+            steps {
+                sh '''
+                tar czf my_app.tar.gz ./app/app.py ./app/requirements.txt
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            archiveArtifacts artifacts: 'my_app.tar.gz', allowEmptyArchive: true
         }
     }
 }
