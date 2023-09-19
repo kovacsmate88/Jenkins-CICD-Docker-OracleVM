@@ -51,7 +51,7 @@ pipeline {
         stage('Cleanup') {
             steps {
                 // Remove the Docker image from the Jenkins agent
-                sh "docker rmi ${IMAGE_NAME}:latest"
+                sh "docker rmi ${IMAGE_NAME}:${VERSION}"
                 echo "Image has removed"
             }
         }
