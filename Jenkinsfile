@@ -26,7 +26,7 @@ pipeline {
                     sh "ls -al"
 
                     // Build the Docker image
-                    sh "docker build -t ${IMAGE_NAME}:${VERSION} -f ./dockerfiles/Dockerfile-app ./app"
+                    sh "docker build -t ${IMAGE_NAME}:${VERSION} -f ./dockerfiles/Dockerfile-app ."
                     echo "Image built"
                 }
             }
