@@ -69,6 +69,7 @@ pipeline {
                 script{
                     // Remove all artifacts except the latest one for storage management
                     sh "ls -t my_app_*.tar.gz | tail -n +2 | xargs rm -f"
+                    sh "ls -t my_app_*.tar.gz"
                 }
                 
             }
