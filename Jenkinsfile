@@ -84,10 +84,11 @@ pipeline {
                         def targetDir = '~/Dokumentumok'
 
                         // Add fingerprint to "known_hosts" to verify it
-                        sh 'ssh-keyscan -H ' + vmHost + ' >> ~/.ssh/known_hosts'
+                        sh 'set -e; ssh-keyscan -H ' + vmHost + ' >> ~/.ssh/known_hosts'
 
                         // Check if the archive already exists on the VM
                         sh '''
+                        set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
                             if [ ! -f "''' + targetDir + '''/my_app_latest.tar.gz" ]; then
                                 exit 1
@@ -97,14 +98,15 @@ pipeline {
 
                         // If the archive doesn't exist, copy it
                         if (currentBuild.resultIsBetterOrEqualTo('UNSTABLE')) {
-                            sh 'scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
+                            sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
                         }
 
                         // Use SCP to copy the artifact to the VM
-                        sh 'scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
+                        sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
 
                         // SSH into the VM and execute commands
                         sh '''
+                        set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
                             cd ''' + targetDir + '''
                             tar xzf my_app_latest.tar.gz
@@ -125,6 +127,5 @@ pipeline {
                 }
             }
         }
-
     }
 }
