@@ -88,6 +88,7 @@ pipeline {
 
 
                         // Check if the archive already exists on the VM
+                        echo "Check if the archive already exists on the VM"
                         sh '''
                         set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
@@ -98,6 +99,7 @@ pipeline {
                         '''
 
                         // If the archive doesn't exist, copy it
+                        echo "Copy archive"
                         if (currentBuild.resultIsBetterOrEqualTo('UNSTABLE')) {
                             sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
                         }
@@ -106,6 +108,7 @@ pipeline {
                         sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
 
                         // SSH into the VM and execute commands
+                        echo "SSH into the VM and execute commands"
                         sh '''
                         set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
