@@ -80,60 +80,51 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH-into-VM', keyFileVariable: 'SSH_KEY')]) {
                         def vmUser = 'vboxuser'
-                        def vmHost = '10.44.9.19'  // Replace with your VM's IP address
-                        def targetDir = '~/Dokumentumok'  // Where you wanna copy the artifact
+                        def vmHost = '10.44.9.19'
+                        def targetDir = '~/Dokumentumok'
 
                         // Add fingerprint to "known_hosts" to verify it
-                        sh "ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
+                        sh 'ssh-keyscan -H ' + vmHost + ' >> ~/.ssh/known_hosts'
 
                         // Check if the archive already exists on the VM
-                        sh """
-                        ssh -i ${SSH_KEY} ${vmUser}@${vmHost} << 'ENDSSH'
-                            if [ ! -f "${targetDir}/my_app_latest.tar.gz" ]; then
+                        sh '''
+                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
+                            if [ ! -f "''' + targetDir + '''/my_app_latest.tar.gz" ]; then
                                 exit 1
                             fi
                         ENDSSH
-                        """
+                        '''
 
                         // If the archive doesn't exist, copy it
                         if (currentBuild.resultIsBetterOrEqualTo('UNSTABLE')) {
-                            sh "scp -i ${SSH_KEY} my_app_latest.tar.gz ${vmUser}@${vmHost}:${targetDir}"
+                            sh 'scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
                         }
-  
+
                         // Use SCP to copy the artifact to the VM
-                        sh "scp -i ${SSH_KEY} my_app_latest.tar.gz ${vmUser}@${vmHost}:${targetDir}"
-                        sh """ 
-                        ssh -i ${SSH_KEY} ${vmUser}@${vmHost} << 'ENDSSH'
-                            cd ${targetDir}
+                        sh 'scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
+
+                        // SSH into the VM and execute commands
+                        sh '''
+                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
+                            cd ''' + targetDir + '''
                             tar xzf my_app_latest.tar.gz
-                            
-                            # Check if pip3 is installed, if not install it
-                            
                             if ! command -v pip3 &> /dev/null; then
                                 sudo apt update
                                 sudo apt install -y python3-pip
                             fi
-
-                            # Check if virtual environment exists, if not create it
-
                             if [ ! -d "myenv" ]; then
                                 python3 -m venv myenv
                             fi
-
                             source myenv/bin/activate
                             pip install -r requirements.txt
-
-                            # Kill the existing app process if it exists
-
                             pkill -f 'python app.py' || true
-                            
                             nohup python app.py &
-                        
                         ENDSSH
-                        """
+                        '''
                     }
                 }
             }
         }
+
     }
 }
