@@ -10,6 +10,5 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
   $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 RUN apt-get update && apt-get install -y docker-ce-cli
 # Add python3 to the image but better solution would be a python jenkins agent
-RUN apt-get update && apt-get install -y python3 python3-pip
 USER jenkins
 RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
