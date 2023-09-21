@@ -83,6 +83,9 @@ pipeline {
                         def vmHost = '10.44.9.19'  // Replace with your VM's IP address
                         def targetDir = '~/Dokumentumok'  // Where you wanna copy the artifact
 
+                        // Add fingerprint to "known_hosts" to verify it
+                        sh "ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
+
                         // Check if the archive already exists on the VM
                         sh """
                         ssh -i ${SSH_KEY} ${vmUser}@${vmHost} << 'ENDSSH'
