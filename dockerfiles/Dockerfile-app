@@ -10,8 +10,9 @@ COPY ./app/requirements.txt /app/
 # Install any packages specified in 'requirements.txt'.
 RUN pip3 install -r requirements.txt
 
-# Copy 'app.py' from the local directory to the "/app" directory in the container.
+# Copy 'app.py' and 'templates' directory from the local directory to the "/app" directory in the container.
 COPY ./app/app.py /app/
+COPY ./app/templates /app/templates
 
 # Run 'python3 app.py' when the container launches.
 CMD ["python3", "app.py"]
