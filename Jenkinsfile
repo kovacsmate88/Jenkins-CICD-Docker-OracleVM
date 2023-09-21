@@ -80,7 +80,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH-into-VM', keyFileVariable: 'SSH_KEY')]) {
                         def vmUser = 'vboxuser'
-                        def vmHost = '10.44.9.19'
+                        def vmHost = '192.168.0.171'
                         def targetDir = '~/Dokumentumok'
 
                         // Add fingerprint to "known_hosts" to verify it
