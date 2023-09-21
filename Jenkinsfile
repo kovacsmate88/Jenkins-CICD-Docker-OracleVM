@@ -80,11 +80,12 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH-into-VM', keyFileVariable: 'SSH_KEY')]) {
                         def vmUser = 'vboxuser'
-                        def vmHost = '192.168.0.171'
+                        def vmHost = env.HOST_IP // Access VM IP which is eaqual to the host machine IP based on the network settings of the VM
                         def targetDir = '~/Dokumentumok'
 
                         // Add fingerprint to "known_hosts" to verify it
-                        sh 'set -e; ssh-keyscan -H ' + vmHost + ' >> ~/.ssh/known_hosts'
+                        sh "set -e; ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
+
 
                         // Check if the archive already exists on the VM
                         sh '''
