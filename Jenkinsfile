@@ -94,7 +94,7 @@ pipeline {
 
                         // Use SCP to copy the artifact to the VM
                         echo "copy the artifact"
-                        sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
+                        sh 'set -e; scp -i $SSH_KEY my_app_${BUILD_NUMBER}.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
 
                         // SSH into the VM and execute commands
                         echo "SSH into the VM and execute commands"
