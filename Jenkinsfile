@@ -91,7 +91,7 @@ pipeline {
                         echo "Create directory"
                         sh '''
                         set -e;
-                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
+                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << ENDSSH
                             mkdir -p ''' + targetDir + '''
                         ENDSSH
                         '''
