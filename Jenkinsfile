@@ -91,7 +91,7 @@ pipeline {
                         echo "Create directory"
                         sh '''
                         set -e;
-                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << ENDSSH
+                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' <<ENDSSH
                             mkdir -p ''' + targetDir + '''
                         ENDSSH
                         '''
@@ -121,11 +121,11 @@ pipeline {
                                 python3 -m venv myenv
                             fi
                             source myenv/bin/activate
-                            pip install -r requirements.txt
+                            pip3 install -r requirements.txt
                             # Kill the old app process if it exists
-                            pkill -f 'python app.py' || true  
+                            pkill -f 'python3 app.py' || true  
                             # Start the new app process
-                            nohup python app.py &  
+                            nohup python3 app.py &  
                         ENDSSH
                         '''
                     }
