@@ -101,15 +101,41 @@ pipeline {
                         echo "copy the artifact"
                         sh 'set -e; scp -i $SSH_KEY my_app_${BUILD_NUMBER}.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
 
-                        // SSH into the VM and execute commands                        
+                        // SSH into the VM and execute commands
                         echo "SSH into the VM and deploy the application"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; if ! dpkg -l | grep python3.10-venv; then sudo apt update; sudo apt install -y python3.10-venv; fi'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; tar xzf my_app_${BUILD_NUMBER}.tar.gz'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; if ! command -v pip3 &> /dev/null; then sudo apt update; sudo apt install -y python3-pip; fi'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; python3 -m venv myenv'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; source myenv/bin/activate; pip3 install -r requirements.txt'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; pkill -f \\'python3 app.py\\' || true'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; nohup python3 app.py &'"
+                        sh """
+                            ssh -i $SSH_KEY ${vmUser}@${vmHost} '
+                                cd ${targetDir};
+                                
+                                # Install python3.10-venv if not already installed
+                                if ! dpkg -l | grep python3.10-venv; then 
+                                    sudo apt update; 
+                                    sudo apt install -y python3.10-venv; 
+                                fi;
+                                
+                                # Extract the archive
+                                tar xzf my_app_${BUILD_NUMBER}.tar.gz;
+                                
+                                # Install pip3 if not already installed
+                                if ! command -v pip3 &> /dev/null; then 
+                                    sudo apt update; 
+                                    sudo apt install -y python3-pip; 
+                                fi;
+                                
+                                # Create virtual environment
+                                python3 -m venv myenv;
+                                
+                                # Activate virtual environment and install requirements
+                                source myenv/bin/activate;
+                                pip3 install -r requirements.txt;
+                                
+                                # Kill the old app process if it exists
+                                pkill -f \\"python3 app.py\\" || true;
+                                
+                                # Start the new app process
+                                nohup python3 app.py &
+                            '
+                        """
                     }
                 }
             }
