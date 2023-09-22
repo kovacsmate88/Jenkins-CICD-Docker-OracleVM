@@ -97,10 +97,10 @@ pipeline {
                         sh 'set -e; scp -i $SSH_KEY my_app_${BUILD_NUMBER}.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
 
                         // SSH into the VM and execute commands
-                        echo "SSH into the VM and execute commands"
-                        sh '''
-                        set -e;
-                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
+                        echo "SSH into the VM and deploy the application"
+                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}'"
+                        sh ''' 
+                        set -e; << 'ENDSSH'
                             cd ''' + targetDir + '''
                             
                             # Remove old unpacked files (useful if the nex archive contains fewer files or differente files)
