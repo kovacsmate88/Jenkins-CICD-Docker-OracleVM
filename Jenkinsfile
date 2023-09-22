@@ -110,7 +110,7 @@ pipeline {
                             fi
                             
                             # Remove old unpacked files (useful if the nex archive contains fewer files or differente files)
-                            find . -mindepth 1 -delete
+                            rm -rf ./
                             
                             # Extract new archive
                             tar xzf my_app_latest.tar.gz
