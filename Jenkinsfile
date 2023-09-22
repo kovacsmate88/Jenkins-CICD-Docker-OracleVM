@@ -101,7 +101,13 @@ pipeline {
                         sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}'"
                         sh ''' 
                         set -e; << 'ENDSSH'
-                            cd ''' + targetDir + '''
+                            cd ${targetDir}
+
+                            # Install python3.10-venv if not already installed
+                            if ! dpkg -l | grep python3.10-venv; then
+                                sudo apt update
+                                sudo apt install -y python3.10-venv
+                            fi
                             
                             # Remove old unpacked files (useful if the nex archive contains fewer files or differente files)
                             find . -mindepth 1 -delete
