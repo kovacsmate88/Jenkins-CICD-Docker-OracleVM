@@ -87,10 +87,15 @@ pipeline {
                         echo "Verify fingerprint"
                         sh "set -e; ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
 
-                        // SSH into the VM and create the directory (if it doesn't exist)
-                        echo "Create directory"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'mkdir -p ${targetDir}'"
-
+                        // Conditionally create or clean the directory
+                        sh script: '''
+                            set -e;
+                            if ssh -i $SSH_KEY ${vmUser}@${vmHost} "[ -d ${targetDir} ]"; then
+                                ssh -i $SSH_KEY ${vmUser}@${vmHost} "cd ${targetDir}; rm -rf ./*"
+                            else
+                                ssh -i $SSH_KEY ${vmUser}@${vmHost} "mkdir -p ${targetDir}"
+                            fi
+                        '''
 
                         // Use SCP to copy the artifact to the VM
                         echo "copy the artifact"
