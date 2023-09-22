@@ -88,14 +88,14 @@ pipeline {
                         sh "set -e; ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
 
                         // Conditionally create or clean the directory
-                        sh script: '''
+                        sh """
                             set -e;
                             if ssh -i $SSH_KEY ${vmUser}@${vmHost} "[ -d ${targetDir} ]"; then
                                 ssh -i $SSH_KEY ${vmUser}@${vmHost} "cd ${targetDir}; rm -rf ./*"
                             else
                                 ssh -i $SSH_KEY ${vmUser}@${vmHost} "mkdir -p ${targetDir}"
                             fi
-                        '''
+                        """
 
                         // Use SCP to copy the artifact to the VM
                         echo "copy the artifact"
@@ -104,7 +104,7 @@ pipeline {
                         // SSH into the VM and execute commands                        
                         echo "SSH into the VM and deploy the application"
                         sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; if ! dpkg -l | grep python3.10-venv; then sudo apt update; sudo apt install -y python3.10-venv; fi'"
-                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; rm -rf ./*'"
+                        //sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; rm -rf ./*'"
                         sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; tar xzf my_app_latest.tar.gz'"
                         sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; if ! command -v pip3 &> /dev/null; then sudo apt update; sudo apt install -y python3-pip; fi'"
                         sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'cd ${targetDir}; python3 -m venv myenv'"
