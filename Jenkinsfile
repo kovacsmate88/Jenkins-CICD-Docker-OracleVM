@@ -89,12 +89,8 @@ pipeline {
 
                         // SSH into the VM and create the directory (if it doesn't exist)
                         echo "Create directory"
-                        sh '''
-                        set -e;
-                        ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'EOF'
-                            mkdir -p ''' + targetDir + '''
-                        EOF
-                        '''
+                        sh "set -e; ssh -i $SSH_KEY ${vmUser}@${vmHost} 'mkdir -p ${targetDir}'"
+
 
                         // Use SCP to copy the artifact to the VM
                         echo "copy the artifact"
