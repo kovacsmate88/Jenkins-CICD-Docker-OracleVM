@@ -84,9 +84,11 @@ pipeline {
                         def targetDir = '~/Dokumentumok/my_app'
 
                         // Add fingerprint to "known_hosts" to verify it
+                        echo "Verify fingerprint"
                         sh "set -e; ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
 
                         // SSH into the VM and create the directory (if it doesn't exist)
+                        echo "Create directory"
                         sh '''
                         set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
@@ -95,6 +97,7 @@ pipeline {
                         '''
 
                         // Use SCP to copy the artifact to the VM
+                        echo "copy the artifact"
                         sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
 
                         // SSH into the VM and execute commands
