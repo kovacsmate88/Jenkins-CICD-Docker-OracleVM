@@ -127,7 +127,7 @@ pipeline {
                                 
                                 # Activate virtual environment and install requirements
                                 source myenv/bin/activate;
-                                pip3 install -r requirements.txt;
+                                pip3 install -r ./app/requirements.txt;
                                 
                                 # Kill the old app process if it exists
                                 pkill -f \\"python3 app.py\\" || true;
