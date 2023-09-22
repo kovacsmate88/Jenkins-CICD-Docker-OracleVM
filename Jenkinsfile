@@ -113,9 +113,10 @@ pipeline {
                                 sudo apt update
                                 sudo apt install -y python3-pip
                             fi
-                            if [ ! -d "myenv" ]; then
-                                python3 -m venv myenv
-                            fi
+                            
+                            # Create virtual environment
+                            python3 -m venv myenv
+                            
                             source myenv/bin/activate
                             pip3 install -r requirements.txt
                             # Kill the old app process if it exists
