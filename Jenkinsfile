@@ -81,28 +81,18 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH-into-VM', keyFileVariable: 'SSH_KEY')]) {
                         def vmUser = 'vboxuser'
                         def vmHost = '192.168.0.171'  // VM's static IP
-                        def targetDir = '~/Dokumentumok'
+                        def targetDir = '~/Dokumentumok/my_app'
 
                         // Add fingerprint to "known_hosts" to verify it
                         sh "set -e; ssh-keyscan -H ${vmHost} >> ~/.ssh/known_hosts"
 
-
-                        // Check if the archive already exists on the VM
-                        echo "Check if the archive already exists on the VM"
+                        // SSH into the VM and create the directory (if it doesn't exist)
                         sh '''
                         set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
-                            if [ ! -f "''' + targetDir + '''/my_app_latest.tar.gz" ]; then
-                                exit 1
-                            fi
+                            mkdir -p ''' + targetDir + '''
                         ENDSSH
                         '''
-
-                        // If the archive doesn't exist, copy it
-                        echo "Copy archive"
-                        if (currentBuild.resultIsBetterOrEqualTo('UNSTABLE')) {
-                            sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
-                        }
 
                         // Use SCP to copy the artifact to the VM
                         sh 'set -e; scp -i $SSH_KEY my_app_latest.tar.gz ' + vmUser + '@' + vmHost + ':' + targetDir
@@ -113,7 +103,13 @@ pipeline {
                         set -e;
                         ssh -i $SSH_KEY ''' + vmUser + '@' + vmHost + ''' << 'ENDSSH'
                             cd ''' + targetDir + '''
+                            
+                            # Remove old unpacked files (useful if the nex archive contains fewer files or differente files)
+                            find . -mindepth 1 -delete
+                            
+                            # Extract new archive
                             tar xzf my_app_latest.tar.gz
+                            
                             if ! command -v pip3 &> /dev/null; then
                                 sudo apt update
                                 sudo apt install -y python3-pip
@@ -123,8 +119,10 @@ pipeline {
                             fi
                             source myenv/bin/activate
                             pip install -r requirements.txt
-                            pkill -f 'python app.py' || true
-                            nohup python app.py &
+                            # Kill the old app process if it exists
+                            pkill -f 'python app.py' || true  
+                            # Start the new app process
+                            nohup python app.py &  
                         ENDSSH
                         '''
                     }
