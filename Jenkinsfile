@@ -130,7 +130,7 @@ pipeline {
                                 pip3 install -r ./app/requirements.txt;
                                 
                                 # Kill the old app process if it exists
-                                pkill -f \\"python3 app.py\\" || true;
+                                pkill -f 'python3 app.py' || true
                                 
                                 # Start the new app process
                                 nohup python3 ./app/app.py &
