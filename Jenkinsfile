@@ -133,7 +133,7 @@ pipeline {
                                 pkill -f 'python3 app.py' || true
                                 
                                 # Start the new app process
-                                nohup python3 ./app/app.py & disown && exit 0
+                                nohup python3 ./app/app.py > /dev/null 2>&1 & exit 0
                             '
                         """
                     }
