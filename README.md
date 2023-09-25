@@ -167,22 +167,13 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
 
 If you encounter an error related to the sudoers file, follow these steps:
 
-  1. Switch to the superuser account:
-      ```bash
-      su -
-      ```
-   2. Open the sudoers file:
-      ```bash
-      visudo
-      ```
-   3. Add your user to the end of the sudoers file:
-      ```text
-      your_vm_user ALL=(ALL:ALL) NOPASSWD: ALL
-      ```
-   4. Save the file and exit the superuser mode:
-      ```bash
-      exit
-      ```
+  1. Switch to the superuser account: `su -`
+      
+   2. Open the sudoers file: `visudo`
+      
+   3. Add your user to the end of the sudoers file: `your_vm_user ALL=(ALL:ALL) NOPASSWD: ALL`
+      
+   4. Save the file and exit the superuser mode: `exit`
    
    Go [back](#ssh-server-installation-step-2) where you stopped :)
 
@@ -239,7 +230,7 @@ Here's how to modify the Netplan configuration file:
    6. **Add**: Copy paste the Jenkins containers private key.
    7. **Note**: To find the private key, enter the Jenkins container and navigate to `/var/jenkins_home/.ssh/id_rsa`.
 
-   **Important**: Update the credential IDs and image name in the Jenkinsfile environment section.
+   **Note**: Update the credential IDs and image name in the Jenkinsfile environment section.
   
 
 ## Deploying the App
