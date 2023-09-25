@@ -16,11 +16,11 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
 
 ## Set up Jenkins and create a job
 
-    1. **Run Jenkins in detached mode:**
+  1. **Run Jenkins in detached mode:**
       ```bash
       docker-compose up --build -d
       ```
-    2. 
+    1. 
     - to get the jenkins password run: ```docker exec container_id cat /var/jenkins_home/secrets/initialAdminPassword```
     - go to Jenkins dashboard: ```localhost:8080```
     - create an admin user
