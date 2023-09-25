@@ -16,7 +16,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
 
 ## Set up Jenkins and create a job
 
-   1. **Run Jenkins in detached mode:**
+   1. Run Jenkins in detached mode:
       ```bash
       docker-compose up --build -d
       ```
@@ -25,22 +25,23 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
       docker exec <container_id> cat /var/jenkins_home/secrets/initialAdminPassword
       ```
     
-    - go to Jenkins dashboard: ```localhost:8080```
-    - create an admin user
-    - click new item to create a job
-    - give it a name
-    - choose pipeline 
-    - go to pipeline section
-    - definition: Pipeline script from SCM
-    - SMC: Git
-    - add repo url (if the repo is private you have to create credentials)
-    - watch the 2 best credential tutorial videos: 
-      - https://youtu.be/AYohbnOqox0?si=LFLyRh7zO5yqRPr7
-      - https://youtu.be/9-ij0cJLDz4?si=AJGXiLVGv5dkthC9
-    - set up the branches which one u want to build 
-    - leave scripth path : Jenkinsfile
-    - hit: Save
+   3. Access the Jenkins dashboard at 'localhost:8080'
+   4. Create an admin user.
+   5. Create a new pipeline job:
+      - Click on "New Item"
+      - Enter a name for the job
+      - Select "Pipeline"
+      - In the "Pipeline" section:
+        - Definition: "Pipeline script from SCM"
+        - SCM: Git
+        - Repository URL: (Add your repo URL; create credentials if the repo is private)
+        - Branches to build: (Specify the branches)
+        - Script Path: 'Jenkinsfile'
+      - Save the job.
 
+   **Recommended Credential Tutorials:**
+   - [Persoanl Access Token](https://youtu.be/AYohbnOqox0?si=LFLyRh7zO5yqRPr7) (enough for this project)
+   - [SSH Keys](https://youtu.be/9-ij0cJLDz4?si=AJGXiLVGv5dkthC9) (if you want to build on every push and etc.)
    
 ## Create a VirtualBox with ubuntu 22.04 iso image
 
