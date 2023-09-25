@@ -145,10 +145,8 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
    
 ### Static IP Configuration on VM
 
-   1. Backup current configuration:
-      ```bash
-      sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml
-      ```
+   1. Backup current configuration: `sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml`
+      
    2. Edit Netplan configuration:
       - The file is usually named "01-netcfg.yaml", "50-cloud-init.yaml", or something similar and is located in /etc/netplan/
       ```bash
@@ -156,23 +154,17 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
       ```
    <a name="static-ip-configuration-on-vm-step-3"></a>
    3. Modify the file as shown [here](#netplan-file-example)
-   4. Apply changes:
-      ```bash
-      sudo netplan apply
-      ```
+   4. Apply changes: `sudo netplan apply`
        
 ---
 
 ### Sudoers File Error Fix
 
-If you encounter an error related to the sudoers file, follow these steps:
+   If you encounter an error related to the sudoers file, follow these steps:
 
-  1. Switch to the superuser account: `su -`
-      
+   1. Switch to the superuser account: `su -`
    2. Open the sudoers file: `visudo`
-      
    3. Add your user to the end of the sudoers file: `your_vm_user ALL=(ALL:ALL) NOPASSWD: ALL`
-      
    4. Save the file and exit the superuser mode: `exit`
    
    Go [back](#ssh-server-installation-step-2) where you stopped :)
