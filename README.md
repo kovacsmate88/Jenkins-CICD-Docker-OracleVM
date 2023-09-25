@@ -148,7 +148,7 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
    1. Backup current configuration: `sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml`
    2. Edit Netplan configuration:
       - The file is usually named "01-netcfg.yaml", "50-cloud-init.yaml", or something similar and is located in /etc/netplan/
-      `sudo nano /etc/netplan/50-cloud-init.yaml`
+      - `sudo nano /etc/netplan/50-cloud-init.yaml`
    <a name="static-ip-configuration-on-vm-step-3"></a>
    3. Modify the file as shown [here](#netplan-file-example), then apply the changes: `sudo netplan apply`
        
