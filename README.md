@@ -6,6 +6,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
 ## Tasks
 
 ### Set up Jenkins and create a job
+
     - run: docker-compose up --build -d (detached mode)
     - to get the jenkins password run: ```docker exec container_id cat /var/jenkins_home/secrets/initialAdminPassword```
     - go to Jenkins dashboard: ```localhost:8080```
@@ -25,11 +26,13 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
     - hit: Save
 
    
-1. create a VirtualBox with ubuntu 22.04 iso image based on these 2 tutorial: 
+### Create a VirtualBox with ubuntu 22.04 iso image based on these 2 tutorial
+
    - [Video tutorial](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
 
-2. SSH Setup:
+### SSH Setup:
+
     1. Set up VM to ssh connection:
        1. Open the VM Virtual Box Manager
        2. Select your ubuntu 22.04 virtual machine
@@ -55,16 +58,16 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
           1. 1. Use ```docker exec -it container_id /bin/bash``` to get a shell in the Jenkins container
           2. run ```ssh-keygen``` to generate a new SSH key pair, which will be saved "/var/jenkins_home/.ssh/id_rsa" by default
              
-       7. Copy Public Key to VM
+       6. Copy Public Key to VM
           1. In the Jenkins container terminal, run ```ssh-copy-id vm_username@vm_ip_address```
           2. run ```ip a``` to find out its IP address. Look for the "inet" address under the network interface you're using (often eth0 or enp0s3)
           3. run ```whoami``` to display the current username
          
-       8.  Test SSH Connection
+       7.  Test SSH Connection
           1.  In the Jenkins container terminal, run ```ssh vm_username@vm_ip_address```
           2.  You are in without needing to enter a password
          
-       9.  On VM set up a static IP:
+       8.  On VM set up a static IP:
            1. Backup Current Configuration: ```sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml```
            2. Edit Netplan configuration: Open the Netplan configuration file in a text editor. The file is usually named "01-netcfg.yaml", "50-cloud-init.yaml", or something similar and is located in /etc/netplan/. ```sudo nano /etc/netplan/50-cloud-init.yaml```
            3. Modify the File:
@@ -91,7 +94,8 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
               1. run: ```sudo netplan apply```
               
 
-4. Create further Jenkins credentials for this project 
+### Create further Jenkins credentials
+
    1.  Docker Hub credential (to upload the built image to Docker Hub):
           - Kind: Username with Password
           - Scope: Global
@@ -110,7 +114,8 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
    3. Dont forget to overwrite the the credential ids and imagename(your_dokcer_hub_username/image_name) in the Jenkinsfile environment part
   
 
-5. Deploy the app
+### Deploy the app
+
    1. Go to localhost:8080 to reach the Jenkins dashboard
    2. Click on your project
    3. On the left side click build
