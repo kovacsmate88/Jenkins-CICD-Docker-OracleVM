@@ -57,7 +57,7 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
  
 ## Create a VirtualBox with ubuntu 22.04 iso image
 
-   I recommend to checkout both
+   I recommend checking out both
    - [Video](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
 
