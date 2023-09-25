@@ -205,10 +205,10 @@ Here's how to modify the Netplan configuration file:
                   addresses: [8.8.8.8, 8.8.4.4]
 
    ```
-   1. "dhcp4": no (Dynamic Host Configuration Protocol), because you're setting a static IP instead
-   2. "addresses": Specifies the static IP address, I recommend to use the currently used, run: `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`) and under it look for the "inet" part
-   3. "routes" -> "via": Specifies the default route, check it with this command: `ip route | grep default`
-   4. "nameservers" -> "addresses": Specifies the DNS servers (Google's DNS in this case)
+   1. `dhcp4`: no (Dynamic Host Configuration Protocol), because you're setting a static IP instead
+   2. `addresses`: Specifies the static IP address, I recommend to use the currently used, run: `ip a` and look for the interface with `state UP` (e.g., `enp0s3`, `eth0`, `wlp3s0`) and under it look for the "inet" part
+   3. `routes` ->`via`: Specifies the default route, check it with this command: `ip route | grep default`
+   4. `nameservers` -> `addresses`: Specifies the DNS servers (Google's DNS in this case)
 
    Go [back](#static-ip-configuration-on-vm-step-3) where you stopped :)
    
@@ -219,14 +219,14 @@ Here's how to modify the Netplan configuration file:
 
 ### Docker Hub Credentials
 
-   1. **Purpose**: To upload the built image to Docker Hub
-   2. **Steps**:
-       - **Kind**: Username with Password
-       - **Scope**: Global
-       - **Username**: `your_docker_hub_username`
-       - **Password**: `your_docker_hub_password`
-       - **ID**: `whatever_you_want`
-                 
+   **Purpose**: To upload the built image to Docker Hub
+   **Steps**:
+   1. **Kind**: Username with Password
+   2. **Scope**: Global
+   3. **Username**: `your_docker_hub_username`
+   4. **Password**: `your_docker_hub_password`
+   5. **ID**: `whatever_you_want`
+              
 ### SSH Credentials for VM
 
    **Purpose**: To get access to the VM
@@ -249,8 +249,8 @@ Here's how to modify the Netplan configuration file:
   - The Jenkins container is running
 
 **Deployment Steps**:
-   - Navigate to `localhost:8080` to access the Jenkins dashboard.
-   - Click on your project.
-   - On the left side, click "Build".
-   - If the build is successful, all stages will appear in green.
-   - The application will be accessible at `http://VM_ip_address:5000`.
+  - Navigate to `localhost:8080` to access the Jenkins dashboard.
+  - Click on your project.
+  - On the left side, click "Build".
+  - If the build is successful, all stages will appear in green.
+  - The application will be accessible at `http://VM_ip_address:5000`.
