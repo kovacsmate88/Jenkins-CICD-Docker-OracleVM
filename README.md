@@ -71,7 +71,7 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
       - **General** -> **Advanced** -> Set **Shared Clipboard** to **Bidirectional**
       - **Network** -> Set **Attached to** to **Bridged Adapter** and you can choose the **Name** based on the **Note**
 
-  **Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
+      **Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
 
 ### SSH Server Installation on VM
 
