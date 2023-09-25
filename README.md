@@ -77,72 +77,33 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
 
    1. Open the terminal on your VM.
    <a name="ssh-server-installation-step-2"></a>
-   2. Update and upgrade packages:
-      ```bash
-      sudo apt update && sudo apt upgrade -y
-      ```
-      - If you encounter a sudoers file error, follow these [steps](#sudoers-file-error-fix).
-   3. Refresh snap packages:
-      ```bash
-      sudo snap refresh
-      ```
-   4. Install SSH server:
-      ```bash
-      sudo apt install openssh-server
-      ```
-   5. Start the SSH server:
-      ```bash
-      sudo systemctl start ssh
-      ```
-   6. Check SSH server status:
-      ```bash
-      sudo systemctl status ssh
-      ```
-   7. Allow SSH traffic:
-      ```bash
-      sudo ufw allow ssh
-      ```
+   2. Update and upgrade packages: `sudo apt update && sudo apt upgrade -y`
+        - If you encounter a sudoers file error, follow these [steps](#sudoers-file-error-fix).
+   3. Refresh snap packages: `sudo snap refresh`
+   4. Install SSH server: `sudo apt install openssh-server`
+   5. Start the SSH server: `sudo systemctl start ssh`
+   6. Check SSH server status: `sudo systemctl status ssh`
+   7. Allow SSH traffic: `sudo ufw allow ssh`
 
 ### Generate SSH Keys in Jenkins Container
 
-   1. Access the Jenkins container:
-      ```bash
-      docker exec -it <container_id> /bin/bash
-      ```
-   2. Generate SSH keys:
-      ```bash
-      ssh-keygen
-      ```
+   1. Access the Jenkins container: `docker exec -it <container_id> /bin/bash`
+   2. Generate SSH keys: `ssh-keygen`
 
    Note: The SSH key pair will be saved "/var/jenkins_home/.ssh/id_rsa" by default.
 
 ### Copy Public Key to VM
 
    1. Open the terminal on your VM
-   2. Find the VM's IP address:
-      ```bash
-      ip a
-      ```
-   3. Find the username of the VM:
-      ```bash
-      whoami
-      ```
-   4. On the host machine access the Jenkins container:
-      ```bash
-      docker exec -it <container_id> /bin/bash
-      ```
-   5. Copy the SSH key to the VM:
-      ```bash
-      ssh-copy-id <vm_username>@<vm_ip_address>
-      ```
+   2. Find the VM's IP address: `ip a`
+   3. Find the username of the VM: `whoami`
+   4. On the host machine access the Jenkins container: `docker exec -it <container_id> /bin/bash`
+   5. Copy the SSH key to the VM: `ssh-copy-id <vm_username>@<vm_ip_address>`
 
 ### Test SSH Connection
 
-   1. From host try to connect to the VM via SSH:
-      ```bash
-      ssh <vm_username>@<vm_ip_address>
-      ```
-   
+   1. From host try to connect to the VM via SSH: `ssh <vm_username>@<vm_ip_address>`
+      
 ### Static IP Configuration on VM
 
    1. Backup current configuration: `sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml`
