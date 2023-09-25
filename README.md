@@ -229,28 +229,28 @@ Here's how to modify the Netplan configuration file:
                  
 ### SSH Credentials for VM
 
-   1. **Purpose**: To get access to the VM
-   2. **Steps**:
-       - **Kind**: SSH Username with private key
-       - **Scope**: Global
-       - **ID**: `whatever_you_want`
-       - **Username**: `your_vm_username`
-       - **Private Key**: check out the "Enter directly"
-       - **Add**: Copy paste the Jenkins containers private key.
-       - **Note**: To find the private key, enter the Jenkins container and navigate to `/var/jenkins_home/.ssh/id_rsa`.
+   **Purpose**: To get access to the VM
+   **Steps**:
+   1. **Kind**: SSH Username with private key
+   2. **Scope**: Global
+   3. **ID**: `whatever_you_want`
+   4. **Username**: `your_vm_username`
+   5. **Private Key**: check out the "Enter directly"
+   6. **Add**: Copy paste the Jenkins containers private key.
+   7. **Note**: To find the private key, enter the Jenkins container and navigate to `/var/jenkins_home/.ssh/id_rsa`.
 
-> **Important**: Update the credential IDs and image name in the Jenkinsfile environment section.
+   **Important**: Update the credential IDs and image name in the Jenkinsfile environment section.
   
 
 ## Deploying the App
 
-   1. **Prerequisites**:
-       - The VM is running
-       - The Jenkins container is running
+**Prerequisites**:
+  - The VM is running
+  - The Jenkins container is running
 
-   2. **Deployment Steps**:
-       1. Navigate to `localhost:8080` to access the Jenkins dashboard.
-       2. Click on your project.
-       3. On the left side, click "Build".
-       4. If the build is successful, all stages will appear in green.
-       5. The application will be accessible at `http://VM_ip_address:5000`.
+**Deployment Steps**:
+   - Navigate to `localhost:8080` to access the Jenkins dashboard.
+   - Click on your project.
+   - On the left side, click "Build".
+   - If the build is successful, all stages will appear in green.
+   - The application will be accessible at `http://VM_ip_address:5000`.
