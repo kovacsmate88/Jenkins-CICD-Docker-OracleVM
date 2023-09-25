@@ -12,9 +12,16 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
   - [SSH Setup](#ssh-setup)
     - [VirtualBox Manager Configuration](#virtualbox-manager-configuration)
     - [SSH Server Installation on VM](#ssh-server-installation-on-vm)
+    - [Generate SSH Keys in Jenkins Container](#generate-ssh-keys-in-jenkins-container)
+    - [Copy Public Key to VM](#copy-public-key-to-vm)
+    - [Test SSH Connection](#test-ssh-connection)
+    - [Static IP Configuration on VM](#static-ip-configuration-on-vm)
     - [Sudoers File Error Fix](#sudoers-file-error-fix)
-  - [Create further Jenkins credentials](#create-further-jenkins-credentials)
-  - [Deploy the app](#deploy-the-app)
+    - [Netplan File Example](#netplan-file-example)
+  - [Jenkins credentials](#jenkins-credentials)
+    - [Docker Hub Credentials](#docker-hub-credentials)
+    - [SSH Credentials for VM](#ssh-credentials-for-vm)
+  - [Deploying the App](#deploying-the-app)
 
 
 ## Set up Jenkins and create a job
@@ -37,19 +44,23 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
       - In the "Pipeline" section:
         - Definition: "Pipeline script from SCM"
         - SCM: Git
-        - Repository URL: (Add your repo URL; create credentials if the repo is private)
+        - Repository URL: (Add this repo URL; create credentials if the repo is private, but you dont need yet, this repo is public)
         - Branches to build: (Specify the branches)
         - Script Path: 'Jenkinsfile'
       - Save the job.
 
+   <a name="credential-tutorials"></a>
    **Credential Tutorials:**
    - [Persoanl Access Token](https://youtu.be/AYohbnOqox0?si=LFLyRh7zO5yqRPr7) (enough for this project)
-   - [SSH Keys](https://youtu.be/9-ij0cJLDz4?si=AJGXiLVGv5dkthC9) (if you want to build on every push and etc.)
-   
+   - [SSH Keys](https://youtu.be/9-ij0cJLDz4?si=AJGXiLVGv5dkthC9) (if you want to build the project on every push and etc.)
+
+ 
 ## Create a VirtualBox with ubuntu 22.04 iso image
 
+   I recommend to checkout both
    - [Video](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
+
 
 ## SSH Setup
       
@@ -92,50 +103,64 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
       sudo ufw allow ssh
       ```
 
+### Generate SSH Keys in Jenkins Container
 
-           4. save the file
-           5. run ```exit``` to exit the superuser
-           6. run again: ```sudo apt update && sudo apt upgrade -y```
-      
-   3. Generate SSH Keys in Jenkins Container
-      1. 1. Use ```docker exec -it container_id /bin/bash``` to get a shell in the Jenkins container
-      2. run ```ssh-keygen``` to generate a new SSH key pair, which will be saved "/var/jenkins_home/.ssh/id_rsa" by default
-         
-   4. Copy Public Key to VM
-      1. In the Jenkins container terminal, run ```ssh-copy-id vm_username@vm_ip_address```
-      2. run ```ip a``` to find out its IP address. Look for the "inet" address under the network interface you're using (often eth0 or enp0s3)
-      3. run ```whoami``` to display the current username
-     
-   5.  Test SSH Connection
-      1.  In the Jenkins container terminal, run ```ssh vm_username@vm_ip_address```
-      2.  You are in without needing to enter a password
-     
-   6.  On VM set up a static IP:
-       1. Backup Current Configuration: ```sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml```
-       2. Edit Netplan configuration: Open the Netplan configuration file in a text editor. The file is usually named "01-netcfg.yaml", "50-cloud-init.yaml", or something similar and is located in /etc/netplan/. ```sudo nano /etc/netplan/50-cloud-init.yaml```
-       3. Modify the File:
-            ```
-               network:
-                  version: 2
-                  renderer: NetworkManager
-                  ethernets:
-                     enp0s3:
-                        dhcp4: no
-                        addresses: [192.168.0.171/24]
-                        routes:
-                        - to: 0.0.0.0/0
-                          via: 192.168.0.1
-                        nameservers:
-                           addresses: [8.8.8.8, 8.8.4.4]
+   1. Access the Jenkins container:
+      ```bash
+      docker exec -it <container_id> /bin/bash
+      ```
+   2. Generate SSH keys:
+      ```bash
+      ssh-keygen
+      ```
 
-            ```
-            1. "dhcp4": no (Dynamic Host Configuration Protocol), because you're setting a static IP instead
-            2. "addresses": specifies the static IP address you want to use, I recommend to use the currently used, run: ```ip a``` and look after the "state UP" at the end of the lines which are something like "enp0s3" or "eth0" and under the "state UP" network look for the "inet" part
-            3. "routes" -> "via": specifies the default route, check it with this command: ```ip route | grep default```
-            4. "nameservers": specifies the DNS servers to use (in this case  Google's DNS servers)
-       4. Apply Changes
-          1. run: ```sudo netplan apply```
+   Note: The SSH key pair will be saved "/var/jenkins_home/.ssh/id_rsa" by default.
 
+### Copy Public Key to VM
+
+   1. Open the terminal on your VM
+   2. Find the VM's IP address:
+      ```bash
+      ip a
+      ```
+   3. Find the username of the VM:
+      ```bash
+      whoami
+      ```
+   4. On the host machine access the Jenkins container:
+      ```bash
+      docker exec -it <container_id> /bin/bash
+      ```
+   5. Copy the SSH key to the VM:
+      ```bash
+      ssh-copy-id <vm_username>@<vm_ip_address>
+      ```
+
+### Test SSH Connection
+
+   1. From host try to connect to the VM via SSH:
+      ```bash
+      ssh <vm_username>@<vm_ip_address>
+      ```
+   
+### Static IP Configuration on VM
+
+   1. Backup current configuration:
+      ```bash
+      sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml
+      ```
+   2. Edit Netplan configuration:
+      - The file is usually named "01-netcfg.yaml", "50-cloud-init.yaml", or something similar and is located in /etc/netplan/
+      ```bash
+      sudo nano /etc/netplan/50-cloud-init.yaml
+      ```
+   <a name="static-ip-configuration-on-vm-step-3"></a>
+   3. Modify the file as shown [here](#netplan-file-example)
+   4. Apply changes:
+      ```bash
+      sudo netplan apply
+      ```
+       
 ---
 
 ### Sudoers File Error Fix
@@ -160,36 +185,72 @@ If you encounter an error related to the sudoers file, follow these steps:
       ```
    
    Go [back](#ssh-server-installation-step-2) where you stopped :)
+
+### Netplan File Example
+
+Here's how to modify the Netplan configuration file:
+
+   ```
+      network:
+         version: 2
+         renderer: NetworkManager
+         ethernets:
+            enp0s3:
+               dhcp4: no
+               addresses: [192.168.0.171/24]
+               routes:
+               - to: 0.0.0.0/0
+                  via: 192.168.0.1
+               nameservers:
+                  addresses: [8.8.8.8, 8.8.4.4]
+
+   ```
+   1. "dhcp4": no (Dynamic Host Configuration Protocol), because you're setting a static IP instead
+   2. "addresses": Specifies the static IP address, I recommend to use the currently used, run: `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`) and under it look for the "inet" part
+   3. "routes" -> "via": Specifies the default route, check it with this command: `ip route | grep default`
+   4. "nameservers" -> "addresses": Specifies the DNS servers (Google's DNS in this case)
+
+   Go [back](#static-ip-configuration-on-vm-step-3) where you stopped :)
    
 
-              
+## Jenkins credentials
 
-## Create further Jenkins credentials
+   You didn't have to create earlier because this repo is public but if you didn't whatch [these](#credential-tutorials) videos, I recommend to.
 
-   1. Docker Hub credential (to upload the built image to Docker Hub):
-      - Kind: Username with Password
-      - Scope: Global
-      - Username: your_docker_hub_username
-      - Password: your_docker_hub_password
-      - ID: whatever_you_want
-              
+### Docker Hub Credentials
 
-   2. SSH credential (to get access to the VM):
-      - Kind: SSH Username with private key
-      - Scope: Global
-      - ID: whatever_you_want
-      - Username: your_vm_username
-      - Private Key -> Enter directly: enter into the Jenkins container and you can check the private key at "/var/jenkins_home/.ssh/id_rsa"
+   1. **Purpose**: To upload the built image to Docker Hub
+   2. **Steps**:
+       - **Kind**: Username with Password
+       - **Scope**: Global
+       - **Username**: `your_docker_hub_username`
+       - **Password**: `your_docker_hub_password`
+       - **ID**: `whatever_you_want`
+                 
+### SSH Credentials for VM
 
-   Note: Update the credential IDs and image name in the Jenkinsfile environment section.
+   1. **Purpose**: To get access to the VM
+   2. **Steps**:
+       - **Kind**: SSH Username with private key
+       - **Scope**: Global
+       - **ID**: `whatever_you_want`
+       - **Username**: `your_vm_username`
+       - **Private Key**: check out the "Enter directly"
+       - **Add**: Copy paste the Jenkins containers private key.
+       - **Note**: To find the private key, enter the Jenkins container and navigate to `/var/jenkins_home/.ssh/id_rsa`.
+
+> **Important**: Update the credential IDs and image name in the Jenkinsfile environment section.
   
 
-## Deploy the app
+## Deploying the App
 
-   1. Go to localhost:8080 to reach the Jenkins dashboard
-   2. Click on your project
-   3. On the left side click build
-   4. If the build was successfully all the stages will be green 
-   5. You can reach the application on the http://VM_ip_address:5000
-   6. On the VM you can check if the app is running with this command: ```ps aux | grep 'app.py'```
+   1. **Prerequisites**:
+       - The VM is running
+       - The Jenkins container is running
 
+   2. **Deployment Steps**:
+       1. Navigate to `localhost:8080` to access the Jenkins dashboard.
+       2. Click on your project.
+       3. On the left side, click "Build".
+       4. If the build is successful, all stages will appear in green.
+       5. The application will be accessible at `http://VM_ip_address:5000`.
