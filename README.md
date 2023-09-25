@@ -9,7 +9,9 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
   - [Table of Contents](#table-of-contents)
   - [Set up Jenkins and create a job](#set-up-jenkins-and-create-a-job)
   - [Create a VirtualBox with ubuntu 22.04 iso image](#create-a-virtualbox-with-ubuntu-2204-iso-image)
-  - [SSH Setup:](#ssh-setup)
+  - [SSH Setup](#ssh-setup)
+    - [Set up VM to ssh connection](#set-up-vm-to-ssh-connection)
+      - [VirtualBox Manager Configuration](#virtualbox-manager-configuration)
   - [Create further Jenkins credentials](#create-further-jenkins-credentials)
   - [Deploy the app](#deploy-the-app)
 
@@ -48,15 +50,22 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
    - [Video](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
 
-## SSH Setup:
+## SSH Setup
    
-   **Set up VM to ssh connection:**
+### Set up VM to ssh connection
    
-   1. Open the VM Virtual Box Manager
-   2. Select your ubuntu 22.04 virtual machine
-   3. Select settings -> General -> Advanced -> Shared clipboard -> Bidirectional go back to Settings -> Network -> Attached to: Briged Adapter -> Name: to check which network interface is active on the host, run: ```ip a``` and at the end of the lines which are staretd like this: 1. lo: or 2: enp0s25 or 3: wlp3s0: look after "state UP" and you should choose that
+#### VirtualBox Manager Configuration
+
+1. **Open VirtualBox Manager** and select your Ubuntu 22.04 virtual machine
+2. **Navigate to Settings**:
+    - **General** -> **Advanced** -> Set **Shared Clipboard** to **Bidirectional**
+    - **Network** -> Set **Attached to** to **Bridged Adapter** and you can choose the **Name** based on this Note
+
+> **Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
+
+   1. Select settings -> General -> Advanced -> Shared clipboard -> Bidirectional go back to Settings -> Network -> Attached to: Briged Adapter -> Name: to check which network interface is active on the host, run: ```ip a``` and at the end of the lines which are staretd like this: 1. lo: or 2: enp0s25 or 3: wlp3s0: look after "state UP" and you should choose that
      Note: With these settings you can copy-paste from host to virtual box and vice versa and the VM will be reachable from the internet
-   4. Install SSH Server on VirtualBox VM:
+   2. Install SSH Server on VirtualBox VM:
       1. Open the terminal
       2. run: ```sudo apt update && sudo apt upgrade -y```
          - if you get this error after you typed the password: vboxuser is not in the sudoers file.  This incident will be reported.
@@ -72,20 +81,20 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
       6. check ssh server: ```sudo systemctl status ssh```
       7. allow ssh traffic on the VM: ```sudo ufw allow ssh```
       
-   5. Generate SSH Keys in Jenkins Container
+   3. Generate SSH Keys in Jenkins Container
       1. 1. Use ```docker exec -it container_id /bin/bash``` to get a shell in the Jenkins container
       2. run ```ssh-keygen``` to generate a new SSH key pair, which will be saved "/var/jenkins_home/.ssh/id_rsa" by default
          
-   6. Copy Public Key to VM
+   4. Copy Public Key to VM
       1. In the Jenkins container terminal, run ```ssh-copy-id vm_username@vm_ip_address```
       2. run ```ip a``` to find out its IP address. Look for the "inet" address under the network interface you're using (often eth0 or enp0s3)
       3. run ```whoami``` to display the current username
      
-   7.  Test SSH Connection
+   5.  Test SSH Connection
       1.  In the Jenkins container terminal, run ```ssh vm_username@vm_ip_address```
       2.  You are in without needing to enter a password
      
-   8.  On VM set up a static IP:
+   6.  On VM set up a static IP:
        1. Backup Current Configuration: ```sudo cp /etc/netplan/*.yaml /etc/netplan/backup.yaml```
        2. Edit Netplan configuration: Open the Netplan configuration file in a text editor. The file is usually named "01-netcfg.yaml", "50-cloud-init.yaml", or something similar and is located in /etc/netplan/. ```sudo nano /etc/netplan/50-cloud-init.yaml```
        3. Modify the File:
