@@ -3,11 +3,24 @@
 the jenkins runs on a docker container which is reachable on localhost:8080. Create pipeline job which Build an image from the Dockerfile-app, and push it to DockerHub. Then build the web application and save the artifact. Then Deploy the artifact of the app with to a virtual machine (use Oracle VirtualBox). 
 
 
-## Tasks
+## Table of Contents
 
-### Set up Jenkins and create a job
+- [Deploy an Artifact with Jenkins on OracleVM](#deploy-an-artifact-with-jenkins-on-oraclevm)
+  - [Table of Contents](#table-of-contents)
+  - [Set up Jenkins and create a job](#set-up-jenkins-and-create-a-job)
+  - [Create a VirtualBox with ubuntu 22.04 iso image](#create-a-virtualbox-with-ubuntu-2204-iso-image)
+  - [SSH Setup:](#ssh-setup)
+  - [Create further Jenkins credentials](#create-further-jenkins-credentials)
+  - [Deploy the app](#deploy-the-app)
 
-    - run: docker-compose up --build -d (detached mode)
+
+## Set up Jenkins and create a job
+
+    1. **Run Jenkins in detached mode:**
+      ```bash
+      docker-compose up --build -d
+      ```
+    2. 
     - to get the jenkins password run: ```docker exec container_id cat /var/jenkins_home/secrets/initialAdminPassword```
     - go to Jenkins dashboard: ```localhost:8080```
     - create an admin user
@@ -26,12 +39,12 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
     - hit: Save
 
    
-### Create a VirtualBox with ubuntu 22.04 iso image based on these 2 tutorial
+## Create a VirtualBox with ubuntu 22.04 iso image
 
-   - [Video tutorial](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
+   - [Video](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
 
-### SSH Setup:
+## SSH Setup:
 
     1. Set up VM to ssh connection:
        1. Open the VM Virtual Box Manager
@@ -94,7 +107,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
               1. run: ```sudo netplan apply```
               
 
-### Create further Jenkins credentials
+## Create further Jenkins credentials
 
    1.  Docker Hub credential (to upload the built image to Docker Hub):
           - Kind: Username with Password
@@ -114,7 +127,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
    3. Dont forget to overwrite the the credential ids and imagename(your_dokcer_hub_username/image_name) in the Jenkinsfile environment part
   
 
-### Deploy the app
+## Deploy the app
 
    1. Go to localhost:8080 to reach the Jenkins dashboard
    2. Click on your project
