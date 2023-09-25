@@ -156,7 +156,6 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
    3. Modify the file as shown [here](#netplan-file-example)
    4. Apply changes: `sudo netplan apply`
        
----
 
 ### Sudoers File Error Fix
 
