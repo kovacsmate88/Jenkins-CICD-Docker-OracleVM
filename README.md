@@ -16,12 +16,15 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
 
 ## Set up Jenkins and create a job
 
-  1. **Run Jenkins in detached mode:**
+   1. **Run Jenkins in detached mode:**
       ```bash
       docker-compose up --build -d
       ```
-    1. 
-    - to get the jenkins password run: ```docker exec container_id cat /var/jenkins_home/secrets/initialAdminPassword```
+   2. Retrieve the Jenkins admin password:
+      ```bash
+      docker exec <container_id> cat /var/jenkins_home/secrets/initialAdminPassword
+      ```
+    
     - go to Jenkins dashboard: ```localhost:8080```
     - create an admin user
     - click new item to create a job
@@ -109,7 +112,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
 
 ## Create further Jenkins credentials
 
-   1.  Docker Hub credential (to upload the built image to Docker Hub):
+   1. **Docker Hub credential (to upload the built image to Docker Hub):**
           - Kind: Username with Password
           - Scope: Global
           - Username: your_docker_hub_username
@@ -124,7 +127,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
          - Username: your_vm_username
          - Private Key -> Enter directly: enter into the Jenkins container and you can check the private key at "/var/jenkins_home/.ssh/id_rsa"
 
-   3. Dont forget to overwrite the the credential ids and imagename(your_dokcer_hub_username/image_name) in the Jenkinsfile environment part
+   Note: Update the credential IDs and image name in the Jenkinsfile environment section.
   
 
 ## Deploy the app
