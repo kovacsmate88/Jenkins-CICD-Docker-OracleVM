@@ -61,7 +61,7 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
     - **General** -> **Advanced** -> Set **Shared Clipboard** to **Bidirectional**
     - **Network** -> Set **Attached to** to **Bridged Adapter** and you can choose the **Name** based on this Note
 
-> **Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
+**Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
 
    1. Select settings -> General -> Advanced -> Shared clipboard -> Bidirectional go back to Settings -> Network -> Attached to: Briged Adapter -> Name: to check which network interface is active on the host, run: ```ip a``` and at the end of the lines which are staretd like this: 1. lo: or 2: enp0s25 or 3: wlp3s0: look after "state UP" and you should choose that
      Note: With these settings you can copy-paste from host to virtual box and vice versa and the VM will be reachable from the internet
