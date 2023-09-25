@@ -10,8 +10,7 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
   - [Set up Jenkins and create a job](#set-up-jenkins-and-create-a-job)
   - [Create a VirtualBox with ubuntu 22.04 iso image](#create-a-virtualbox-with-ubuntu-2204-iso-image)
   - [SSH Setup](#ssh-setup)
-    - [Set up VM to ssh connection](#set-up-vm-to-ssh-connection)
-      - [VirtualBox Manager Configuration](#virtualbox-manager-configuration)
+    - [VirtualBox Manager Configuration](#virtualbox-manager-configuration)
   - [Create further Jenkins credentials](#create-further-jenkins-credentials)
   - [Deploy the app](#deploy-the-app)
 
@@ -51,10 +50,8 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
 
 ## SSH Setup
-   
-### Set up VM to ssh connection
-   
-#### VirtualBox Manager Configuration
+      
+### VirtualBox Manager Configuration
 
 1. **Open VirtualBox Manager** and select your Ubuntu 22.04 virtual machine
 2. **Navigate to Settings**:
