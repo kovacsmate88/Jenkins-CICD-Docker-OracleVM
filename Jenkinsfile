@@ -2,12 +2,12 @@ pipeline {
     agent any 
 
     environment {
-        // Define any environment variables here
 
-        // Create a Jenkins credential with DockerHub username and password
         DOCKER_CREDENTIAL_ID = 'Docker-Hub'
         IMAGE_NAME = 'mate8817/leroy-jenkins'
         VERSION = '${BUILD_NUMBER}'
+        SSH_CREDENTIAL_ID = 'SSH-into-VM'
+        
     }
 
     stages {
@@ -78,7 +78,7 @@ pipeline {
         stage('Deploy to VM') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'SSH-into-VM', keyFileVariable: 'SSH_KEY')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: "${SSH_CREDENTIAL_ID}", keyFileVariable: 'SSH_KEY')]) {
                         def vmUser = 'vboxuser'
                         def vmHost = '192.168.0.171'  // VM's static IP
                         def targetDir = '~/Dokumentumok/my_app'
