@@ -5,7 +5,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
 
 ## Tasks
 
-1. Set up Jenkins and create a job
+### Set up Jenkins and create a job
     - run: docker-compose up --build -d (detached mode)
     - to get the jenkins password run: ```docker exec container_id cat /var/jenkins_home/secrets/initialAdminPassword```
     - go to Jenkins dashboard: ```localhost:8080```
@@ -25,17 +25,17 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
     - hit: Save
 
    
-2. create a VirtualBox with ubuntu 22.04 iso image based on these 2 tutorial: 
+1. create a VirtualBox with ubuntu 22.04 iso image based on these 2 tutorial: 
    - [Video tutorial](https://youtu.be/nvdnQX9UkMY?si=4ZYKGq5R6lCtqlqZ)
    - [Official Step-by-step](https://ubuntu.com/tutorials/how-to-run-ubuntu-desktop-on-a-virtual-machine-using-virtualbox#1-overview)
 
-3. SSH Setup:
+2. SSH Setup:
     1. Set up VM to ssh connection:
        1. Open the VM Virtual Box Manager
        2. Select your ubuntu 22.04 virtual machine
        3. Select settings -> General -> Advanced -> Shared clipboard -> Bidirectional go back to Settings -> Network -> Attached to: Briged Adapter -> Name: to check which network interface is active on the host, run: ```ip a``` and at the end of the lines which are staretd like this: 1. lo: or 2: enp0s25 or 3: wlp3s0: look after "state UP" and you should choose that
          Note: With these settings you can copy-paste from host to virtual box and vice versa and the VM will be reachable from the internet
-       5. Install SSH Server on VirtualBox VM:
+       4. Install SSH Server on VirtualBox VM:
           1. Open the terminal
           2. run: ```sudo apt update && sudo apt upgrade -y```
              - if you get this error after you typed the password: vboxuser is not in the sudoers file.  This incident will be reported.
@@ -51,7 +51,7 @@ the jenkins runs on a docker container which is reachable on localhost:8080. Cre
           6. check ssh server: ```sudo systemctl status ssh```
           7. allow ssh traffic on the VM: ```sudo ufw allow ssh```
           
-       6. Generate SSH Keys in Jenkins Container
+       5. Generate SSH Keys in Jenkins Container
           1. 1. Use ```docker exec -it container_id /bin/bash``` to get a shell in the Jenkins container
           2. run ```ssh-keygen``` to generate a new SSH key pair, which will be saved "/var/jenkins_home/.ssh/id_rsa" by default
              
