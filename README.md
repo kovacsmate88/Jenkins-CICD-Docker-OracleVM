@@ -11,6 +11,8 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
   - [Create a VirtualBox with ubuntu 22.04 iso image](#create-a-virtualbox-with-ubuntu-2204-iso-image)
   - [SSH Setup](#ssh-setup)
     - [VirtualBox Manager Configuration](#virtualbox-manager-configuration)
+    - [SSH Server Installation on VM](#ssh-server-installation-on-vm)
+    - [Sudoers File Error Fix](#sudoers-file-error-fix)
   - [Create further Jenkins credentials](#create-further-jenkins-credentials)
   - [Deploy the app](#deploy-the-app)
 
@@ -53,30 +55,47 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
       
 ### VirtualBox Manager Configuration
 
-1. **Open VirtualBox Manager** and select your Ubuntu 22.04 virtual machine
-2. **Navigate to Settings**:
-    - **General** -> **Advanced** -> Set **Shared Clipboard** to **Bidirectional**
-    - **Network** -> Set **Attached to** to **Bridged Adapter** and you can choose the **Name** based on this Note
+  1. **Open VirtualBox Manager** and select your Ubuntu 22.04 virtual machine
+  2. **Navigate to Settings**:
+      - **General** -> **Advanced** -> Set **Shared Clipboard** to **Bidirectional**
+      - **Network** -> Set **Attached to** to **Bridged Adapter** and you can choose the **Name** based on the **Note**
 
-**Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
+  **Note**: To find the active network interface on your host machine, run `ip a` and look for the interface with "state UP" (e.g., `enp0s3`, `eth0`, `wlp3s0`).
 
-   1. Select settings -> General -> Advanced -> Shared clipboard -> Bidirectional go back to Settings -> Network -> Attached to: Briged Adapter -> Name: to check which network interface is active on the host, run: ```ip a``` and at the end of the lines which are staretd like this: 1. lo: or 2: enp0s25 or 3: wlp3s0: look after "state UP" and you should choose that
-     Note: With these settings you can copy-paste from host to virtual box and vice versa and the VM will be reachable from the internet
-   2. Install SSH Server on VirtualBox VM:
-      1. Open the terminal
-      2. run: ```sudo apt update && sudo apt upgrade -y```
-         - if you get this error after you typed the password: vboxuser is not in the sudoers file.  This incident will be reported.
-           1. run ```su -``` to switch to the superuser (root) account
-           2. run: ```visudo```
-           3. under this line: ```%sudo   ALL=(ALL:ALL) ALL``` add this line: ```your_ubuntu_user ALL=(ALL:ALL) NOPASSWD: ALL``` 
+### SSH Server Installation on VM
+
+   1. Open the terminal on your VM.
+   <a name="ssh-server-installation-step-2"></a>
+   2. Update and upgrade packages:
+      ```bash
+      sudo apt update && sudo apt upgrade -y
+      ```
+      - If you encounter a sudoers file error, follow these [steps](#sudoers-file-error-fix).
+   3. Refresh snap packages:
+      ```bash
+      sudo snap refresh
+      ```
+   4. Install SSH server:
+      ```bash
+      sudo apt install openssh-server
+      ```
+   5. Start the SSH server:
+      ```bash
+      sudo systemctl start ssh
+      ```
+   6. Check SSH server status:
+      ```bash
+      sudo systemctl status ssh
+      ```
+   7. Allow SSH traffic:
+      ```bash
+      sudo ufw allow ssh
+      ```
+
+
            4. save the file
            5. run ```exit``` to exit the superuser
            6. run again: ```sudo apt update && sudo apt upgrade -y```
-      3. run: ```sudo snap refresh```
-      4. now download the ssh server: ```sudo apt install openssh-server```
-      5. start ssh server: ```sudo systemctl start ssh```
-      6. check ssh server: ```sudo systemctl status ssh```
-      7. allow ssh traffic on the VM: ```sudo ufw allow ssh```
       
    3. Generate SSH Keys in Jenkins Container
       1. 1. Use ```docker exec -it container_id /bin/bash``` to get a shell in the Jenkins container
@@ -116,6 +135,33 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
             4. "nameservers": specifies the DNS servers to use (in this case  Google's DNS servers)
        4. Apply Changes
           1. run: ```sudo netplan apply```
+
+---
+
+### Sudoers File Error Fix
+
+If you encounter an error related to the sudoers file, follow these steps:
+
+  1. Switch to the superuser account:
+      ```bash
+      su -
+      ```
+   2. Open the sudoers file:
+      ```bash
+      visudo
+      ```
+   3. Add your user to the end of the sudoers file:
+      ```text
+      your_vm_user ALL=(ALL:ALL) NOPASSWD: ALL
+      ```
+   4. Save the file and exit the superuser mode:
+      ```bash
+      exit
+      ```
+   
+   Go [back](#ssh-server-installation-step-2) where you stopped :)
+   
+
               
 
 ## Create further Jenkins credentials
