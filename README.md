@@ -26,15 +26,8 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
 
 ## Set up Jenkins and create a job
 
-   1. Run Jenkins in detached mode:
-      ```bash
-      docker-compose up --build -d
-      ```
-   2. Retrieve the Jenkins admin password:
-      ```bash
-      docker exec <container_id> cat /var/jenkins_home/secrets/initialAdminPassword
-      ```
-    
+   1. Run Jenkins in detached mode: `docker-compose up --build -d`
+   2. Retrieve the Jenkins admin password: `docker exec <container_id> cat /var/jenkins_home/secrets/initialAdminPassword`    
    3. Access the Jenkins dashboard at 'localhost:8080'
    4. Create an admin user.
    5. Create a new pipeline job:
@@ -190,6 +183,6 @@ Here's how to modify the Netplan configuration file:
 **Deployment Steps**:
   - Navigate to `localhost:8080` to access the Jenkins dashboard.
   - Click on your project.
-  - On the left side, click "Build".
+  - On the left side, click "Build". (this case if you want to rebuild, you have to push "Build everytime")
   - If the build is successful, all stages will appear in green.
   - The application will be accessible at `http://VM_ip_address:5000`.
