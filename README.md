@@ -147,9 +147,9 @@ Here's how to modify the Netplan configuration file:
 
 ## Jenkins credentials
 
-   You didn't have to create earlier because this repo is public but if you didn't whatch [these](#credential-tutorials) videos, I recommend to.
+   You didn't have to create a credential earlier, because this repo is public but if you didn't whatch [these](#credential-tutorials) videos, I suggest to.
 
-### Docker Hub Credentials
+### Docker Hub Credential
 
    **Purpose**: To upload the built image to Docker Hub
    **Steps**:
@@ -159,7 +159,7 @@ Here's how to modify the Netplan configuration file:
    4. **Password**: `your_docker_hub_password`
    5. **ID**: `whatever_you_want`
               
-### SSH Credentials for VM
+### SSH Credential for VM
 
    **Purpose**: To get access to the VM
    **Steps**:
