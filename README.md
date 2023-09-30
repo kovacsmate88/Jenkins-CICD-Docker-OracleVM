@@ -19,8 +19,8 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
     - [Sudoers File Error Fix](#sudoers-file-error-fix)
     - [Netplan File Example](#netplan-file-example)
   - [Jenkins credentials](#jenkins-credentials)
-    - [Docker Hub Credentials](#docker-hub-credentials)
-    - [SSH Credentials for VM](#ssh-credentials-for-vm)
+    - [Docker Hub Credential](#docker-hub-credential)
+    - [SSH Credential for VM](#ssh-credential-for-vm)
   - [Deploying the App](#deploying-the-app)
 
 
@@ -44,8 +44,8 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
 
    <a name="credential-tutorials"></a>
    **Credential Tutorials:**
-   - [Persoanl Access Token](https://youtu.be/AYohbnOqox0?si=LFLyRh7zO5yqRPr7) (enough for this project)
-   - [SSH Keys](https://youtu.be/9-ij0cJLDz4?si=AJGXiLVGv5dkthC9) (if you want to build the project on every push and etc.)
+   - [Persoanl Access Token](https://youtu.be/AYohbnOqox0?si=LFLyRh7zO5yqRPr7)
+   - [SSH Keys](https://youtu.be/9-ij0cJLDz4?si=AJGXiLVGv5dkthC9)
 
  
 ## Create a VirtualBox with ubuntu 22.04 iso image
@@ -147,7 +147,7 @@ Here's how to modify the Netplan configuration file:
 
 ## Jenkins credentials
 
-   You didn't have to create a credential earlier, because this repo is public but if you didn't whatch [these](#credential-tutorials) videos, I suggest to.
+   If you didn't whatch [these](#credential-tutorials) videos, I suggest to.
 
 ### Docker Hub Credential
 
