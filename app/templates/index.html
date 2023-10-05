@@ -1,9 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Hello World</title>
-    </head>
-    <body>
-        {{ message|safe }}
-    </body>
+<head>
+    <title>System Info</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+
+<h1>Host: <span id="host"></span></h1>
+<p>OS: <span id="os"></span></p>
+<p>CPU Usage: <span id="cpu"></span>%</p>
+<p>Memory Usage: <span id="memory"></span></p>
+
+<script type="text/javascript">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    socket.on('connect', function() {
+        console.log('Connected');
+    });
+
+    socket.on('system_info', function(msg) {
+        document.getElementById('host').innerText = msg.host;
+        document.getElementById('os').innerText = msg.os;
+    });
+
+    socket.on('system_usage', function(msg) {
+        document.getElementById('cpu').innerText = msg.cpu;
+        document.getElementById('memory').innerText = msg.memory;
+    });
+</script>
+
+</body>
 </html>
