@@ -1,40 +1,35 @@
-from flask import Flask, request, render_template
-import logging
+from flask import Flask, render_template
+from flask_socketio import SocketIO
+import psutil
+import platform
 import os
 
 app = Flask(__name__)
-
-
-# Initialize logging
-logging.basicConfig(level=logging.INFO)
-
-
-def get_host():
-    return request.host
-
-
-def generate_message(host):
-    return f"<p>Hello World!</p><p>You are connected to {host}</p>"
+socketio = SocketIO(app)
 
 
 @app.route("/")
-def hello_world():
-    try:
-        host = get_host()
-        message = generate_message(host)
-        logging.info(f"Generated message: {message}")
-        return render_template("index.html", message=message)
-    except Exception as e:
-        logging.error(f"An error occurred: {str(e)}")
-        return f"An error occurred: {str(e)}"
+def main():
+    return render_template("index.html")
 
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return "Page not found", 404
+@socketio.on("connect")
+def handle_connect():
+    os_info = f"{platform.system()} {platform.release()}"
+    host_name = platform.node()
+    socketio.emit("system_info", {"host": host_name, "os": os_info})
+
+
+def get_system_usage():
+    while True:
+        cpu_usage = psutil.cpu_percent(interval=1)
+        memory_info = psutil.virtual_memory()
+        memory_usage = f"{memory_info.used / (1024 ** 3):.2f} GB / {memory_info.total / (1024 ** 3):.2f} GB"
+        socketio.emit("system_usage", {"cpu": cpu_usage, "memory": memory_usage})
 
 
 if __name__ == "__main__":
+    socketio.start_background_task(target=get_system_usage)
     port = int(os.environ.get("PORT", 5000))
     debug_mode = bool(os.environ.get("DEBUG_MODE", True))
-    app.run(debug=debug_mode, host="0.0.0.0", port=port)
+    socketio.run(app, debug=debug_mode, host="0.0.0.0", port=port)
