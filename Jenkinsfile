@@ -107,14 +107,14 @@ pipeline {
                             ssh -i $SSH_KEY ${vmUser}@${vmHost} '
                                 cd ${targetDir};
                                 
+                                # Extract the archive
+                                tar xzf my_app_${BUILD_NUMBER}.tar.gz;
+
                                 # Install python3.10-venv if not already installed
                                 if ! dpkg -l | grep python3.10-venv; then 
                                     sudo apt update; 
                                     sudo apt install -y python3.10-venv; 
                                 fi;
-                                
-                                # Extract the archive
-                                tar xzf my_app_${BUILD_NUMBER}.tar.gz;
                                 
                                 # Install pip3 if not already installed
                                 if ! command -v pip3 &> /dev/null; then 
