@@ -38,7 +38,7 @@ This project demonstrates how to set up a CI/CD pipeline using Jenkins running i
         - Definition: "Pipeline script from SCM"
         - SCM: Git
         - Repository URL: (Add this repo URL; create credentials if the repo is private, but you dont need yet, this repo is public)
-        - Branches to build: (Specify the branches)
+        - Branches to build: */main
         - Script Path: 'Jenkinsfile'
       - Save the job.
 
